@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>럭키가이에게 클로버를!</title>
+  <style>
+    body {
+      background-color: #e5fbe0;
+      font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
+      color: #3a593f;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .hidden {
+      display: none;
+    }
+    .centered {
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #a8e6a2;
+      border: none;
+      border-radius: 15px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      color: #3a593f;
+    }
+    input, textarea {
+      border-radius: 10px;
+      border: 1px solid #c5e1c0;
+      padding: 10px;
+      margin: 5px;
+      width: 80%;
+      font-size: 1rem;
+    }
+    .clovers {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 10px;
+      width: 80%;
+      max-width: 400px;
+      justify-items: center;
+    }
+    .clovers div {
+      font-size: 2rem;
+      cursor: pointer;
+    }
+    #password-section {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+    #password-input {
+      width: 80px;
+      padding: 4px;
+      font-size: 0.8rem;
+    }
+    #password-section button {
+      padding: 4px 8px;
+      font-size: 0.7rem;
+    }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      width: 300px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="password-section">
+    <input type="password" id="password-input" placeholder="비밀번호" />
+    <button onclick="unlock()">입력</button>
+  </div>
+
+  <div id="first-screen" class="centered">
+    <h1>럭키가이에게 클로버를 선물해주러 갈까요?</h1>
+    <button onclick="nextScreen()">다음</button>
+  </div>
+
+  <div id="input-screen" class="hidden centered">
+    <input type="text" id="name" placeholder="이름(별명)" /><br />
+    <textarea id="message" placeholder="선생님께 남기고 싶은 말"></textarea><br />
+    <button onclick="submitMessage()">보내기</button>
+    <div class="clovers" id="clover-container"></div>
+  </div>
+
+  <!-- 모달 창 -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <p id="modalMessage"></p>
+      <button onclick="closeModal()">닫기</button>
+    </div>
+  </div>
+
+  <script>
+    let unlocked = false;
+    const cloverData = [];
+
+    function nextScreen() {
+      document.getElementById("first-screen").classList.add("hidden");
+      document.getElementById("input-screen").classList.remove("hidden");
+    }
+
+    function submitMessage() {
+      const name = document.getElementById("name").value.trim();
+      const message = document.getElementById("message").value.trim();
+      if (!name || !message) return alert("이름과 내용을 모두 입력해주세요!");
+
+      const clover = document.createElement("div");
+      clover.textContent = "🍀";
+      clover.onclick = () => {
+        if (!unlocked) {
+          alert("비밀번호를 먼저 입력해주세요!");
+          return;
+        }
+        openModal(`${name}의 메시지:\n\n${message}`);
+      };
+
+      document.getElementById("clover-container").appendChild(clover);
+      cloverData.push({ name, message });
+
+      document.getElementById("name").value = "";
+      document.getElementById("message").value = "";
+    }
+
+    function unlock() {
+      const password = document.getElementById("password-input").value;
+      if (password === "luckyteacher") {
+        unlocked = true;
+        alert("편지를 열람할 수 있게 되었습니다.");
+      } else {
+        alert("비밀번호가 틀렸어요!");
+      }
+    }
+
+    function openModal(message) {
+      document.getElementById("modalMessage").innerText = message;
+      document.getElementById("modal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+  </script>
+</body>
+</html>
